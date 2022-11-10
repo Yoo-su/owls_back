@@ -22,6 +22,10 @@ export class AuthService {
 
         return {
             success: true,
+            user: {
+                nickname: user.user_nickname,
+                email: user.user_email,
+            },
             access_token: this.jwtService.sign(payload)
         }
     }
