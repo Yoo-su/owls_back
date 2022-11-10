@@ -11,4 +11,9 @@ export class UserController {
         const res = await this.userService.findAll();
         console.log(res)
     }
+
+    @Post("/signup")
+    async createUser(@Body() createUserDto: CreateUserDto) {
+        return this.userService.create(createUserDto)
+    }
 }

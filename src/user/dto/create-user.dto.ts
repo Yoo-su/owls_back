@@ -4,6 +4,9 @@ export default class CreateUserDto {
     @IsString()
     user_name: string;
 
+    @IsString()
+    user_nickname: string;
+
     @IsEmail()
     user_email: string;
 

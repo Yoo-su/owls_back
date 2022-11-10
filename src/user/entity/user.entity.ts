@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({ schema: "owls", name: "users" })
 export class User {
@@ -8,7 +8,10 @@ export class User {
     @Column()
     user_nickname: string;
 
-    @PrimaryGeneratedColumn()
+    @Column()
+    user_avatar: string;
+
+    @PrimaryColumn()
     user_email: string;
 
     @Column()
