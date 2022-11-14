@@ -29,13 +29,13 @@ export class FriendController {
 
     @UseGuards(AuthGuard('jwt'))
     @Get('/list')
-    getFriendsList(@Query() friend_target: string) {
-        return this.friendService.getFriends(friend_target);
+    getFriendsList(@Query('user_email') user_email: string) {
+        return this.friendService.getFriends(user_email);
     }
 
     @UseGuards(AuthGuard('jwt'))
     @Get('/request-list')
-    getFriendRequestsList(@Query() friend_target: string) {
+    getFriendRequestsList(@Query('friend_target') friend_target: string) {
         return this.friendService.getFriendRequests(friend_target);
     }
 }

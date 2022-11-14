@@ -14,15 +14,40 @@ export class FriendService {
         private dataSource: DataSource,
     ) { }
 
-    async getFriends(friend_target: string) {
-        const res = await this.dataSource.query(`
-            select friend_id, user_email, user_avatar, user_nickname from friends join users on friend_source=user_email where friend_target="${friend_target}" and updated_date IS NOT NULL;
+    async getFriends(user_email: string) {
+        const rows1 = await this.dataSource.query(`
+            select friend_id, user_email, user_avatar, user_nickname from friends join users on friend_source=user_email 
+            where friend_target="${user_email}" and updated_date IS NOT NULL;
         `)
-        return res;
+
+        const rows2 = await this.dataSource.query(`
+            select friend_id, user_email, user_avatar, user_nickname from friends join users on friend_target=user_email 
+            where friend_source="${user_email}" and updated_date IS NOT NULL;
+        `)
+
+
+        return rows1.concat(rows2);
     }
 
     async createFriend(createFriendDto: CreateFriendDto) {
         try {
+            const { friend_source, friend_target } = createFriendDto;
+            const entity = await this.friendRepository.findOne({
+                where: {
+                    friend_source,
+                    friend_target
+                }
+            });
+
+            //이미 존재하는 경우
+            if (entity) {
+                let message: string;
+                entity.updated_date ? message = "이미 친구로 등록된 사용자입니다" : message = "이미 친구요청을 보냈습니다";
+                return {
+                    success: false,
+                    message
+                }
+            }
             const instance = this.friendRepository.create({
                 ...createFriendDto
             })
