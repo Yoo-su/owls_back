@@ -50,8 +50,8 @@ export class PostController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Delete()
-    deletePost() {
-
+    @Delete("/delete")
+    deletePost(@Body('post_id') post_id: number) {
+        return this.postService.deletePost(post_id);
     }
 }

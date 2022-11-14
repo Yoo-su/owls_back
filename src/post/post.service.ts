@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-import { DownloadResponse, Storage, Bucket } from "@google-cloud/storage";
+import { Storage, Bucket } from "@google-cloud/storage";
 import { Repository, DataSource } from 'typeorm';
 import CreatePostDto from './dto/create-post.dto';
 import { Post } from './entity/post.entity';
@@ -34,21 +34,31 @@ export class PostService {
                 ...createPostDto
             })
 
-            const newEntity = await this.postRepository.save(instance);
-            const createdPost = await this.dataSource.query(`
-                select post_id, post_text, post_image, post_date, user_email, user_avatar, user_nickname from posts join users on post_user=user_email where post_id="${newEntity.post_id}";
-            `)
-            return {
-                entity: createdPost[0],
-                success: true
-            }
+            await this.postRepository.save(instance);
+            return await this.getAllPost();
         } catch (err) {
-            return {
-                success: false,
-                msg: err
-            }
+            throw err;
         }
+    }
 
+    async deletePost(post_id: number) {
+        try {
+            const entity = await this.postRepository.findOne({ where: { post_id } });
+
+            if (entity.post_image) {
+                const path = entity.post_image.split("/").at(-1);
+                const res = await this.deleteStorageFile(path);
+            }
+
+            await this.dataSource.query(`
+                delete from comments where comment_post=${post_id};
+            `);
+            await this.postRepository.delete(post_id);
+
+            return await this.getAllPost();
+        } catch (err) {
+            throw err
+        }
     }
 
     createStorageFile(file: Express.Multer.File) {
@@ -64,21 +74,25 @@ export class PostService {
         })
     }
 
+    async deleteStorageFile(path: string) {
+        const res = await this.storage
+            .bucket("owls_image_bucket")
+            .file(path)
+            .delete({ ignoreNotFound: true });
+
+        return res;
+    }
+
 
     async getAllPost() {
         try {
             const posts = await this.dataSource.query(`
-                select post_id, post_text, post_image, post_date, user_email, user_avatar, user_nickname from posts, users where post_user=user_email order by post_id desc;
+                select post_id, post_text, post_image, post_date, user_email, user_avatar, user_name, user_nickname from posts join users on post_user=user_email order by post_id desc;
             `)
-            return {
-                success: true,
-                posts: posts,
-            }
+
+            return posts
         } catch (err) {
-            return {
-                success: false,
-                msg: err
-            }
+            throw err
         }
 
     }
