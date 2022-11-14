@@ -6,6 +6,10 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
 import { Post } from './post/entity/post.entity';
+import { CommentModule } from './comment/comment.module';
+import { Comment } from './comment/entity/comment.entity';
+import { FriendModule } from './friend/friend.module';
+import { Friend } from './friend/entity/friend.entity';
 
 @Module({
   imports: [
@@ -16,7 +20,7 @@ import { Post } from './post/entity/post.entity';
       username: 'root',
       password: '@o01047550871',
       database: 'owls',
-      entities: [User, Post],
+      entities: [User, Post, Comment, Friend],
       synchronize: false,
     }),
     ConfigModule.forRoot({
@@ -26,6 +30,8 @@ import { Post } from './post/entity/post.entity';
     UserModule,
     AuthModule,
     PostModule,
+    CommentModule,
+    FriendModule,
   ],
   controllers: [],
   providers: [],
