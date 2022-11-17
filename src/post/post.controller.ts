@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UploadedFile, UseGuards, UseInterceptors, Query } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 import CreatePostDto from './dto/create-post.dto';
@@ -15,9 +15,9 @@ export class PostController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Get()
-    getAllFriendsPosts() {
-
+    @Get('/friend')
+    getAllFriendsPosts(@Query('user_email') user_email: string) {
+        return this.postService.getFriendsPost(user_email);
     }
 
     @UseGuards(AuthGuard('jwt'))

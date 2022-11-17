@@ -94,6 +94,16 @@ export class PostService {
         } catch (err) {
             throw err
         }
+    }
 
+    async getFriendsPost(user_email: string) {
+        try {
+            const result = await this.dataSource.query(`
+                select post_id, post_text, post_image, post_date, user_email, user_avatar, user_name, user_nickname from posts join users on post_user=user_email where post_user in (select friend_source as email from friends where friend_target="${user_email}" and updated_date IS NOT NULL union select friend_target as email from friends where friend_source="${user_email}" and updated_date IS NOT NULL);
+            `);
+            return result;
+        } catch (err) {
+            throw err;
+        }
     }
 }
