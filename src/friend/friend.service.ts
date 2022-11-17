@@ -14,14 +14,22 @@ export class FriendService {
         private dataSource: DataSource,
     ) { }
 
+    async getFriend(friend_id: number) {
+        const res = await this.dataSource.query(`
+            select friend_id, created_date, updated_date, user_email, user_avatar, user_nickname from friends join users on friend_source=user_email 
+            where friend_id=${friend_id} and updated_date IS NOT NULL;
+        `);
+        return res[0];
+    }
+
     async getFriends(user_email: string) {
         const rows1 = await this.dataSource.query(`
-            select friend_id, user_email, user_avatar, user_nickname from friends join users on friend_source=user_email 
+            select friend_id, created_date, updated_date, user_email, user_avatar, user_nickname from friends join users on friend_source=user_email 
             where friend_target="${user_email}" and updated_date IS NOT NULL;
         `)
 
         const rows2 = await this.dataSource.query(`
-            select friend_id, user_email, user_avatar, user_nickname from friends join users on friend_target=user_email 
+            select friend_id, created_date, updated_date, user_email, user_avatar, user_nickname from friends join users on friend_target=user_email 
             where friend_source="${user_email}" and updated_date IS NOT NULL;
         `)
 
@@ -66,7 +74,7 @@ export class FriendService {
                 updated_date: updated_date
             });
 
-            return res;
+            return await this.getFriend(friend_id);
         } catch (err) {
             throw err;
         }
@@ -90,6 +98,18 @@ export class FriendService {
             return res;
         } catch (err) {
             throw err
+        }
+    }
+
+    async getUserRequests(user_email: string) {
+        try {
+            const res = await this.dataSource.query(`
+                select friend_id, created_date, user_email, user_avatar, user_nickname from friends join users on friend_target=user_email where friend_source="${user_email}" and updated_date is NULL;
+            `);
+
+            return res;
+        } catch (err) {
+            throw err;
         }
     }
 }
