@@ -38,4 +38,10 @@ export class FriendController {
     getFriendRequestsList(@Query('friend_target') friend_target: string) {
         return this.friendService.getFriendRequests(friend_target);
     }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Get('/my-requests')
+    getUserRequests(@Query('user_email') user_email: string) {
+        return this.friendService.getUserRequests(user_email);
+    }
 }
