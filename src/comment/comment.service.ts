@@ -19,10 +19,7 @@ export class CommentService {
                 ...createCommentDto
             })
             const newEntity = await this.commentRepository.save(instance);
-            const result = await this.dataSource.query(`
-                select comment_id, comment_text, comment_date, user_email, user_avatar, user_nickname from comments join posts on comment_post=post_id join users on comment_user=user_email where comment_id=${newEntity.comment_id}; 
-            `);
-            return result;
+            return await this.getComments(newEntity.comment_post)
         } catch (err) {
             throw err
         }
@@ -30,14 +27,9 @@ export class CommentService {
 
     async getComments(postId: number) {
         try {
-            const comments = await this.dataSource.query(`
+            return await this.dataSource.query(`
             select comment_id, comment_text, comment_date, user_email, user_avatar, user_nickname from comments join posts on comment_post=post_id join users on comment_user=user_email where comment_post=${postId} order by comment_id desc; 
             `)
-
-            return {
-                success: true,
-                comments: comments
-            }
         } catch (err) {
             throw err
         }
