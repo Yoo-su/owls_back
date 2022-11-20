@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { ConfigService } from '@nestjs/config';
 import { Storage, Bucket } from "@google-cloud/storage";
 import { Repository, DataSource } from 'typeorm';
 import CreatePostDto from './dto/create-post.dto';
@@ -16,7 +15,7 @@ export class PostService {
         private postRepository: Repository<Post>,
         @InjectDataSource()
         private dataSource: DataSource,
-        private configService: ConfigService) {
+    ) {
         this.storage = new Storage({
             projectId: process.env.PROJECT_ID,
             credentials: {
