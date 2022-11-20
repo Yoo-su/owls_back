@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entity/user.entity';
 import { CreateUserDto } from './dto';
+import { PostService } from 'src/post/post.service';
+import { FriendService } from 'src/friend/friend.service';
 
 @Injectable()
 export class UserService {
@@ -10,6 +12,8 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private usersRepository: Repository<User>,
+        private postService: PostService,
+        private friendService: FriendService,
     ) { }
 
     async findOne(user_email: string): Promise<User | null> {
@@ -58,6 +62,24 @@ export class UserService {
             }
         } catch (err) {
             throw err;
+        }
+    }
+
+    async getProfile(user_id: number) {
+        const user = await this.usersRepository.findOne({ where: { user_id } });
+        const friends = await this.friendService.getFriends(user_id);
+        const posts = await this.postService.getUserPosts(user_id);
+
+        return {
+            user: {
+                user_nickname: user.user_nickname,
+                user_avatar: user.user_avatar,
+                user_name: user.user_name,
+                user_email: user.user_email,
+                user_id: user.user_id,
+            },
+            friends,
+            posts,
         }
     }
 }
