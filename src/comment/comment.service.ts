@@ -28,7 +28,7 @@ export class CommentService {
     async getComments(postId: number) {
         try {
             return await this.dataSource.query(`
-            select comment_id, comment_text, comment_date, user_email, user_avatar, user_nickname from comments join posts on comment_post=post_id join users on comment_user=user_email where comment_post=${postId} order by comment_id desc; 
+            select comment_id, comment_text, comment_date, user_id, user_email, user_avatar, user_nickname from comments join posts on comment_post=post_id join users on comment_user=user_id where comment_post=${postId} order by comment_id desc; 
             `)
         } catch (err) {
             throw err

@@ -1,11 +1,11 @@
-import { IsString } from 'class-validator';
+import { IsString, IsNumber } from 'class-validator';
 
 export default class CreateFriendDto {
-    @IsString()
-    friend_source: string;
+    @IsNumber()
+    friend_source: number;
 
-    @IsString()
-    friend_target: string;
+    @IsNumber()
+    friend_target: number;
 
     @IsString()
     created_date: string;

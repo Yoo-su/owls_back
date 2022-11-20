@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsString, IsNumber, } from 'class-validator';
 
 export default class CreatePostDto {
     @IsString()
@@ -10,6 +10,6 @@ export default class CreatePostDto {
     @IsString()
     post_date: string;
 
-    @IsString()
-    post_user: string;
+    @IsNumber()
+    post_user: number;
 }

@@ -15,5 +15,5 @@ export class Post {
     post_date: string;
 
     @Column()
-    post_user: string;
+    post_user: number;
 }

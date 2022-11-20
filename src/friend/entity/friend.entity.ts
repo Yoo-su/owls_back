@@ -6,10 +6,10 @@ export class Friend {
     friend_id: number;
 
     @Column()
-    friend_source: string;
+    friend_source: number;
 
     @Column()
-    friend_target: string;
+    friend_target: number;
 
     @Column()
     created_date: string;

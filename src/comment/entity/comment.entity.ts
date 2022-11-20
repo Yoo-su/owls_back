@@ -15,5 +15,5 @@ export class Comment {
     comment_post: number;
 
     @Column()
-    comment_user: string;
+    comment_user: number;
 }

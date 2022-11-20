@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Post, UploadedFile, UseGuards, UseInterceptors, Query } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
-import CreatePostDto from './dto/create-post.dto';
 import { PostService } from './post.service';
 
 @Controller('post')
@@ -11,13 +10,13 @@ export class PostController {
     @UseGuards(AuthGuard('jwt'))
     @Get('/all')
     getAllPosts() {
-        return this.postService.getAllPost();
+        return this.postService.getAllPosts();
     }
 
     @UseGuards(AuthGuard('jwt'))
     @Get('/friend')
-    getAllFriendsPosts(@Query('user_email') user_email: string) {
-        return this.postService.getFriendsPost(user_email);
+    getAllFriendsPosts(@Query('user_id') user_id: number) {
+        return this.postService.getFriendsPosts(user_id);
     }
 
     @UseGuards(AuthGuard('jwt'))

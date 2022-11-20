@@ -16,24 +16,22 @@ export class FriendService {
 
     async getFriend(friend_id: number) {
         const res = await this.dataSource.query(`
-            select friend_id, created_date, updated_date, user_email, user_avatar, user_nickname from friends join users on friend_source=user_email 
+            select friend_id, created_date, updated_date, user_id, user_email, user_avatar, user_nickname from friends join users on friend_source=user_id 
             where friend_id=${friend_id} and updated_date IS NOT NULL;
         `);
         return res[0];
     }
 
-    async getFriends(user_email: string) {
+    async getFriends(user_id: number) {
         const rows1 = await this.dataSource.query(`
-            select friend_id, created_date, updated_date, user_email, user_avatar, user_nickname from friends join users on friend_source=user_email 
-            where friend_target="${user_email}" and updated_date IS NOT NULL;
+            select friend_id, created_date, updated_date, user_id, user_email, user_avatar, user_nickname from friends join users on friend_source=user_id 
+            where friend_target="${user_id}" and updated_date IS NOT NULL;
         `)
 
         const rows2 = await this.dataSource.query(`
-            select friend_id, created_date, updated_date, user_email, user_avatar, user_nickname from friends join users on friend_target=user_email 
-            where friend_source="${user_email}" and updated_date IS NOT NULL;
+            select friend_id, created_date, updated_date, user_id, user_email, user_avatar, user_nickname from friends join users on friend_target=user_id 
+            where friend_source="${user_id}" and updated_date IS NOT NULL;
         `)
-
-
         return rows1.concat(rows2);
     }
 
@@ -89,22 +87,21 @@ export class FriendService {
         }
     }
 
-    async getFriendRequests(friend_target: string) {
+    async getFriendRequests(friend_target: number) {
         try {
             const res = await this.dataSource.query(`
-                SELECT friend_id, user_email, user_avatar, user_nickname from friends join users on friend_source=user_email where friend_target="${friend_target}" and updated_date IS NULL; 
+                SELECT friend_id, user_id, user_email, user_avatar, user_nickname from friends join users on friend_source=user_id where friend_target="${friend_target}" and updated_date IS NULL; 
             `)
-
             return res;
         } catch (err) {
             throw err
         }
     }
 
-    async getUserRequests(user_email: string) {
+    async getUserRequests(user_id: number) {
         try {
             const res = await this.dataSource.query(`
-                select friend_id, created_date, user_email, user_avatar, user_nickname from friends join users on friend_target=user_email where friend_source="${user_email}" and updated_date is NULL;
+                select friend_id, created_date, user_id, user_email, user_avatar, user_nickname from friends join users on friend_target=user_id where friend_source="${user_id}" and updated_date is NULL;
             `);
 
             return res;

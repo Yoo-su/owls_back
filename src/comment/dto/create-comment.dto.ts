@@ -7,8 +7,8 @@ export default class CreateCommentDto {
     @IsString()
     comment_date: string;
 
-    @IsString()
-    comment_user: string;
+    @IsNumber()
+    comment_user: number;
 
     @IsNumber()
     comment_post: number;

@@ -17,7 +17,6 @@ export class FriendController {
     @UseGuards(AuthGuard('jwt'))
     @Patch('/make')
     makeFriend(@Body() makeFriendDto: MakeFriendDto) {
-        console.log(makeFriendDto);
         return this.friendService.makeFriend(makeFriendDto);
     }
 
@@ -29,19 +28,19 @@ export class FriendController {
 
     @UseGuards(AuthGuard('jwt'))
     @Get('/list')
-    getFriendsList(@Query('user_email') user_email: string) {
-        return this.friendService.getFriends(user_email);
+    getFriendsList(@Query('user_id') user_id: number) {
+        return this.friendService.getFriends(user_id);
     }
 
     @UseGuards(AuthGuard('jwt'))
     @Get('/request-list')
-    getFriendRequestsList(@Query('friend_target') friend_target: string) {
+    getFriendRequestsList(@Query('friend_target') friend_target: number) {
         return this.friendService.getFriendRequests(friend_target);
     }
 
     @UseGuards(AuthGuard('jwt'))
     @Get('/my-requests')
-    getUserRequests(@Query('user_email') user_email: string) {
-        return this.friendService.getUserRequests(user_email);
+    getUserRequests(@Query('user_id') user_id: number) {
+        return this.friendService.getUserRequests(user_id);
     }
 }
