@@ -15,7 +15,7 @@ import { AppController } from './app.controller';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
+    /* TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
       port: 3306,
@@ -24,7 +24,7 @@ import { AppController } from './app.controller';
       database: 'owls',
       entities: [User, Post, Comment, Friend],
       synchronize: false,
-    }),
+    }), */
     UserModule,
     AuthModule,
     PostModule,
