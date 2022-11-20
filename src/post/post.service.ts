@@ -35,7 +35,7 @@ export class PostService {
             })
 
             await this.postRepository.save(instance);
-            return await this.getAllPost();
+            return await this.getAllPosts();
         } catch (err) {
             throw err;
         }
@@ -55,7 +55,7 @@ export class PostService {
             `);
             await this.postRepository.delete(post_id);
 
-            return await this.getAllPost();
+            return;
         } catch (err) {
             throw err
         }
@@ -84,10 +84,10 @@ export class PostService {
     }
 
 
-    async getAllPost() {
+    async getAllPosts() {
         try {
             const posts = await this.dataSource.query(`
-                select post_id, post_text, post_image, post_date, user_email, user_avatar, user_name, user_nickname from posts join users on post_user=user_email order by post_id desc;
+                select post_id, post_text, post_image, post_date, user_id, user_email, user_avatar, user_name, user_nickname from posts join users on post_user=user_id order by post_id desc;
             `)
 
             return posts
@@ -96,12 +96,24 @@ export class PostService {
         }
     }
 
-    async getFriendsPost(user_email: string) {
+    //user_id로 친구들 포스트 검색해 리턴
+    async getFriendsPosts(user_id: number) {
         try {
             const result = await this.dataSource.query(`
-                select post_id, post_text, post_image, post_date, user_email, user_avatar, user_name, user_nickname from posts join users on post_user=user_email where post_user in (select friend_source as email from friends where friend_target="${user_email}" and updated_date IS NOT NULL union select friend_target as email from friends where friend_source="${user_email}" and updated_date IS NOT NULL);
+                select post_id, post_text, post_image, post_date, user_id, user_email, user_avatar, user_name, user_nickname from posts join users on post_user=user_id where post_user in (select friend_source as id from friends where friend_target="${user_id}" and updated_date IS NOT NULL union select friend_target as id from friends where friend_source="${user_id}" and updated_date IS NOT NULL);
             `);
             return result;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    //user_id로 해당 유저 포스트 검색해 리턴
+    async getUserPosts(user_id: number) {
+        try {
+            return await this.dataSource.query(`
+            select post_id, post_text, post_image, post_date, user_id, user_email, user_avatar, user_name, user_nickname from posts join users on post_user=user_id where post_user=${user_id} order by post_id desc;
+            `);
         } catch (err) {
             throw err;
         }
