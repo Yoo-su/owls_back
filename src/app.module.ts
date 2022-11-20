@@ -13,6 +13,10 @@ import { Friend } from './friend/entity/friend.entity';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -22,10 +26,6 @@ import { Friend } from './friend/entity/friend.entity';
       database: 'owls',
       entities: [User, Post, Comment, Friend],
       synchronize: false,
-    }),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
     }),
     UserModule,
     AuthModule,
