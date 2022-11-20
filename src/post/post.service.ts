@@ -18,10 +18,10 @@ export class PostService {
         private dataSource: DataSource,
         private configService: ConfigService) {
         this.storage = new Storage({
-            projectId: configService.get<string>("PROJECT_ID"),
+            projectId: process.env.PROJECT_ID,
             credentials: {
-                client_email: configService.get<string>("CLIENT_EMAIL"),
-                private_key: configService.get<string>("PRIVATE_KEY").replace(/\\n/g, '\n')
+                client_email: process.env.CLIENT_EMAIL,
+                private_key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n')
             }
         })
 
