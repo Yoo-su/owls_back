@@ -11,11 +11,12 @@ import { Comment } from './comment/entity/comment.entity';
 import { FriendModule } from './friend/friend.module';
 import { Friend } from './friend/entity/friend.entity';
 import { AppController } from './app.controller';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    /* TypeOrmModule.forRoot({
+    TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
       port: 3306,
@@ -24,7 +25,7 @@ import { AppController } from './app.controller';
       database: 'owls',
       entities: [User, Post, Comment, Friend],
       synchronize: false,
-    }), */
+    }),
     UserModule,
     AuthModule,
     PostModule,
@@ -34,4 +35,6 @@ import { AppController } from './app.controller';
   controllers: [AppController],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private dataSource: DataSource) { }
+}
