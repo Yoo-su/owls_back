@@ -15,10 +15,10 @@ import { Friend } from './friend/entity/friend.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: process.env.DB_HOST,
       port: 3306,
       username: 'root',
-      password: '@o01047550871',
+      password: process.env.DB_PW,
       database: 'owls',
       entities: [User, Post, Comment, Friend],
       synchronize: false,
