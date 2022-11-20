@@ -10,6 +10,7 @@ import { CommentModule } from './comment/comment.module';
 import { Comment } from './comment/entity/comment.entity';
 import { FriendModule } from './friend/friend.module';
 import { Friend } from './friend/entity/friend.entity';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { Friend } from './friend/entity/friend.entity';
     CommentModule,
     FriendModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule { }
