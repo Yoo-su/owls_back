@@ -11,19 +11,19 @@ import { Comment } from './comment/entity/comment.entity';
 import { FriendModule } from './friend/friend.module';
 import { Friend } from './friend/entity/friend.entity';
 import { AppController } from './app.controller';
-import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DB_HOST,
+      socketPath: process.env.CONNECTION_NAME,
       port: 3306,
       username: 'root',
       password: process.env.DB_PW,
       database: 'owls',
       entities: [User, Post, Comment, Friend],
+      connectTimeout: 20000,
       synchronize: false,
     }),
     UserModule,
@@ -36,5 +36,4 @@ import { DataSource } from 'typeorm';
   providers: [],
 })
 export class AppModule {
-  constructor(private dataSource: DataSource) { }
 }
