@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, UseGuards, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UseGuards, Query, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CommentService } from './comment.service';
 import CreateCommentDto from './dto/create-comment.dto';
@@ -20,8 +20,8 @@ export class CommentController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Delete('/delete')
-    deleteComment(@Body() comment_id: number) {
+    @Delete('/:id')
+    deleteComment(@Param("comment_id") comment_id: number) {
         return this.commentService.deleteComment(comment_id);
     }
 }

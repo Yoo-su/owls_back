@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Patch, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Patch, Query, UseGuards, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import MakeFriendDto from './dto/makeFriend.dto';
 import CreateFriendDto from './dto/createFriend.entity';
@@ -21,8 +21,8 @@ export class FriendController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Delete('/delete')
-    deleteFriend(@Body('friend_id') friend_id: number) {
+    @Delete('/:id')
+    deleteFriend(@Param('friend_id') friend_id: number) {
         return this.friendService.deleteFriend(friend_id);
     }
 

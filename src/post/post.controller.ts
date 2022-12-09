@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, UploadedFile, UseGuards, UseInterceptors, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UploadedFile, UseGuards, UseInterceptors, Query, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { PostService } from './post.service';
@@ -49,8 +49,8 @@ export class PostController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Delete("/delete")
-    deletePost(@Body('post_id') post_id: number) {
+    @Delete("/:id")
+    deletePost(@Param('post_id') post_id: number) {
         return this.postService.deletePost(post_id);
     }
 }
